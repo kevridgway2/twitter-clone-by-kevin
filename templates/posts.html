@@ -1,0 +1,79 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<section class="content">
+  <div class="main-header">
+    <img src="/static/img/twitter.png" class="main-logo" />
+    <h1>Home</h1>
+  </div> 
+  <section class="post_form">
+    <form action="/" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="text" name="name" placeholder="Name" required />
+      <textarea type="text" name="body" placeholder="What's Happening..?" required></textarea>
+      <div class="bottom-area">
+        <div class="mb-0">
+          <input class="choose file" name="image" type="file" />
+        </div>
+        {% csrf_token %}
+        <button class="tweetbutton-m" type="submit" style=" background-color: rgb(29, 161, 242);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0px 25px;
+        border: 0;
+        border-radius: 10px;
+        margin-left: 25%;">Tweet</button>
+      </div>
+    </form>
+  </section>
+  <section class="posts">
+    <ul>
+      {% for post in posts %}
+      <li>
+        <img class="menu_icon js-menu-icon" src="{% static 'img/more.png' %}" />
+        <div class="menu">
+          <ul>
+            <li><a href="/edit/{{post.id}}/">Edit</a></li>
+            <li><a href="/delete/{{post.id}}/">Delete</a></li>
+          </ul>
+
+        </div>
+        <div class="logo">
+          <img src="{% static 'img/user.jpg' %}" />
+        </div>
+        <div class="name_body">
+          <div>{{ post.name }}</div>
+          <div>{{ post.created_at }}</div>
+          <p>{{ post.body }}</p>
+          {% if post.image %}
+          <img src="{{ post.image.url }}" style="width: 100%;" class="postedimage" />
+          {% endif %}
+          <!-- <div>
+            <div class="like js-like" data-tweet-id="{{post.id}}">
+              <img src="https://techis-wd-twitter-clone.herokuapp.com/static/img/icon-heart-gray.svg">
+            </div>
+            <div class="like-count js-like-count">
+
+            </div> -->
+
+
+          <div class="icon_list">
+            <form id="likes-form" action="{% url 'like_post' post.pk %}" method='POST'>
+              {% csrf_token %}
+              <button class="like-button" type="submit" , name="post_id" , value="{{ post.id }}">
+                &#10084;
+              </button>
+              {{post.likes}}
+            </form>
+          </div>
+
+        </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+  <script src="{% static 'js/posts.js' %}"></script>
+</section>
+{% endblock %}
